@@ -1,0 +1,39 @@
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Arquivos temporários do Jupyter
+.ipynb_checkpoints/
+
+# Dados brutos e intermediários
+data/raw/
+data/interim/
+
+# Variáveis de ambiente e credenciais
+.env
+.env.*
+!.env.example
+
+# Configurações locais dos editores
+.vscode/
+.idea/
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*~
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Pacote de entrega
+RiftCluster.zip
