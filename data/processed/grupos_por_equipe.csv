@@ -1,0 +1,291 @@
+﻿position,league,teamname,0,1
+bot,CBLOL,FURIA,0,1
+bot,CBLOL,Fluxo W7M,1,0
+bot,CBLOL,LOUD,2,0
+bot,CBLOL,Leviatan,0,1
+bot,CBLOL,LØS,1,0
+bot,CBLOL,RED Canids,1,1
+bot,CBLOL,Vivo Keyd Stars,1,2
+bot,CBLOL,paiN Gaming,1,1
+bot,LCK,BNK FEARX,0,2
+bot,LCK,DN SOOPers,1,0
+bot,LCK,Dplus Kia,0,1
+bot,LCK,Gen.G,0,1
+bot,LCK,HANJIN BRION,0,1
+bot,LCK,Hanwha Life Esports,0,1
+bot,LCK,KT Rolster,0,2
+bot,LCK,Kiwoom DRX,1,2
+bot,LCK,Nongshim RedForce,0,2
+bot,LCK,T1,0,1
+bot,LCP,CTBC Flying Oyster,0,1
+bot,LCP,Deep Cross Gaming,1,0
+bot,LCP,DetonatioN FocusMe,1,0
+bot,LCP,Fukuoka SoftBank HAWKS gaming,0,1
+bot,LCP,GAM Esports,0,1
+bot,LCP,Ground Zero Gaming,0,1
+bot,LCP,MVK Esports,0,1
+bot,LCP,Team Secret Whales,0,1
+bot,LCS,Cloud9,1,1
+bot,LCS,Dignitas,1,0
+bot,LCS,Disguised,1,0
+bot,LCS,FlyQuest,1,0
+bot,LCS,LYON,0,1
+bot,LCS,Sentinels,0,1
+bot,LCS,Shopify Rebellion,1,0
+bot,LCS,Team Liquid,1,0
+bot,LEC,Fnatic,0,1
+bot,LEC,G2 Esports,0,1
+bot,LEC,GiantX,1,1
+bot,LEC,Karmine Corp,0,1
+bot,LEC,Movistar KOI,0,1
+bot,LEC,Natus Vincere,0,1
+bot,LEC,SK Gaming,0,1
+bot,LEC,Shifters,1,0
+bot,LEC,Team Heretics,0,1
+bot,LEC,Team Vitality,0,1
+bot,LPL,Anyone's Legend,0,1
+bot,LPL,Bilibili Gaming,0,1
+bot,LPL,EDward Gaming,0,1
+bot,LPL,Invictus Gaming,0,3
+bot,LPL,JD Gaming,0,1
+bot,LPL,LGD Gaming,1,0
+bot,LPL,LNG Esports,0,1
+bot,LPL,Ninjas in Pyjamas,0,2
+bot,LPL,Oh My God,0,2
+bot,LPL,Team WE,0,1
+bot,LPL,ThunderTalk Gaming,1,0
+bot,LPL,Top Esports,0,2
+bot,LPL,Ultra Prime,1,0
+bot,LPL,Weibo Gaming,0,1
+jng,CBLOL,FURIA,1,0
+jng,CBLOL,Fluxo W7M,1,0
+jng,CBLOL,LOUD,2,0
+jng,CBLOL,Leviatan,0,1
+jng,CBLOL,LØS,0,2
+jng,CBLOL,RED Canids,1,1
+jng,CBLOL,Vivo Keyd Stars,1,0
+jng,CBLOL,paiN Gaming,0,1
+jng,LCK,BNK FEARX,1,0
+jng,LCK,DN SOOPers,1,1
+jng,LCK,Dplus Kia,2,0
+jng,LCK,Gen.G,1,0
+jng,LCK,HANJIN BRION,1,0
+jng,LCK,Hanwha Life Esports,1,0
+jng,LCK,KT Rolster,0,1
+jng,LCK,Kiwoom DRX,0,1
+jng,LCK,Nongshim RedForce,0,1
+jng,LCK,T1,1,0
+jng,LCP,CTBC Flying Oyster,1,0
+jng,LCP,Deep Cross Gaming,1,0
+jng,LCP,DetonatioN FocusMe,0,1
+jng,LCP,Fukuoka SoftBank HAWKS gaming,0,1
+jng,LCP,GAM Esports,1,0
+jng,LCP,Ground Zero Gaming,1,0
+jng,LCP,MVK Esports,1,0
+jng,LCP,Team Secret Whales,1,0
+jng,LCS,Cloud9,1,0
+jng,LCS,Dignitas,0,1
+jng,LCS,Disguised,0,1
+jng,LCS,FlyQuest,1,0
+jng,LCS,LYON,1,0
+jng,LCS,Sentinels,1,0
+jng,LCS,Shopify Rebellion,0,1
+jng,LCS,Team Liquid,1,0
+jng,LEC,Fnatic,1,0
+jng,LEC,G2 Esports,1,0
+jng,LEC,GiantX,0,1
+jng,LEC,Karmine Corp,1,0
+jng,LEC,Movistar KOI,1,0
+jng,LEC,Natus Vincere,1,0
+jng,LEC,SK Gaming,0,1
+jng,LEC,Shifters,0,2
+jng,LEC,Team Heretics,0,2
+jng,LEC,Team Vitality,0,1
+jng,LPL,Anyone's Legend,1,0
+jng,LPL,Bilibili Gaming,1,0
+jng,LPL,EDward Gaming,2,0
+jng,LPL,Invictus Gaming,1,0
+jng,LPL,JD Gaming,1,0
+jng,LPL,LGD Gaming,1,0
+jng,LPL,LNG Esports,1,0
+jng,LPL,Ninjas in Pyjamas,1,0
+jng,LPL,Oh My God,0,1
+jng,LPL,Team WE,0,1
+jng,LPL,ThunderTalk Gaming,1,0
+jng,LPL,Top Esports,1,1
+jng,LPL,Weibo Gaming,2,0
+mid,CBLOL,Estral Esports,1,0
+mid,CBLOL,FURIA,1,0
+mid,CBLOL,Fluxo W7M,1,0
+mid,CBLOL,LOUD,2,0
+mid,CBLOL,Leviatan,1,0
+mid,CBLOL,LØS,1,0
+mid,CBLOL,RED Canids,2,0
+mid,CBLOL,Vivo Keyd Stars,0,1
+mid,CBLOL,paiN Gaming,0,1
+mid,LCK,BNK FEARX,1,0
+mid,LCK,DN SOOPers,1,0
+mid,LCK,Dplus Kia,1,0
+mid,LCK,Gen.G,0,1
+mid,LCK,HANJIN BRION,2,0
+mid,LCK,Hanwha Life Esports,0,1
+mid,LCK,KT Rolster,1,0
+mid,LCK,Kiwoom DRX,0,1
+mid,LCK,Nongshim RedForce,0,1
+mid,LCK,T1,1,0
+mid,LCP,CTBC Flying Oyster,2,0
+mid,LCP,Deep Cross Gaming,0,1
+mid,LCP,DetonatioN FocusMe,1,1
+mid,LCP,Fukuoka SoftBank HAWKS gaming,0,1
+mid,LCP,GAM Esports,2,0
+mid,LCP,Ground Zero Gaming,1,0
+mid,LCP,MVK Esports,1,0
+mid,LCP,Team Secret Whales,1,0
+mid,LCS,Cloud9,2,0
+mid,LCS,Dignitas,1,0
+mid,LCS,Disguised,0,1
+mid,LCS,FlyQuest,1,0
+mid,LCS,LYON,0,1
+mid,LCS,Sentinels,1,0
+mid,LCS,Shopify Rebellion,1,0
+mid,LCS,Team Liquid,0,1
+mid,LEC,Fnatic,1,0
+mid,LEC,G2 Esports,0,1
+mid,LEC,GiantX,0,1
+mid,LEC,Karmine Corp,1,0
+mid,LEC,Movistar KOI,1,0
+mid,LEC,Natus Vincere,1,0
+mid,LEC,SK Gaming,2,0
+mid,LEC,Shifters,1,0
+mid,LEC,Team Heretics,1,0
+mid,LEC,Team Vitality,2,0
+mid,LPL,Anyone's Legend,1,0
+mid,LPL,Bilibili Gaming,0,1
+mid,LPL,EDward Gaming,1,1
+mid,LPL,Invictus Gaming,3,0
+mid,LPL,JD Gaming,1,0
+mid,LPL,LGD Gaming,1,0
+mid,LPL,LNG Esports,2,0
+mid,LPL,Ninjas in Pyjamas,0,1
+mid,LPL,Oh My God,0,1
+mid,LPL,Team WE,1,0
+mid,LPL,ThunderTalk Gaming,1,0
+mid,LPL,Top Esports,1,0
+mid,LPL,Ultra Prime,0,1
+mid,LPL,Weibo Gaming,1,0
+sup,CBLOL,FURIA,1,0
+sup,CBLOL,Fluxo W7M,0,1
+sup,CBLOL,LOUD,1,1
+sup,CBLOL,Leviatan,1,0
+sup,CBLOL,LØS,1,0
+sup,CBLOL,RED Canids,1,1
+sup,CBLOL,Vivo Keyd Stars,1,1
+sup,CBLOL,paiN Gaming,0,2
+sup,LCK,BNK FEARX,1,0
+sup,LCK,DN SOOPers,1,0
+sup,LCK,Dplus Kia,1,0
+sup,LCK,Gen.G,1,0
+sup,LCK,HANJIN BRION,1,0
+sup,LCK,Hanwha Life Esports,1,0
+sup,LCK,KT Rolster,1,0
+sup,LCK,Kiwoom DRX,0,1
+sup,LCK,Nongshim RedForce,1,0
+sup,LCK,T1,1,0
+sup,LCP,CTBC Flying Oyster,0,2
+sup,LCP,Deep Cross Gaming,1,0
+sup,LCP,DetonatioN FocusMe,1,0
+sup,LCP,Fukuoka SoftBank HAWKS gaming,0,1
+sup,LCP,GAM Esports,1,0
+sup,LCP,Ground Zero Gaming,2,0
+sup,LCP,MVK Esports,1,0
+sup,LCP,Team Secret Whales,1,0
+sup,LCS,Cloud9,1,0
+sup,LCS,Dignitas,0,1
+sup,LCS,Disguised,0,1
+sup,LCS,FlyQuest,1,0
+sup,LCS,LYON,0,1
+sup,LCS,Sentinels,1,0
+sup,LCS,Shopify Rebellion,0,2
+sup,LCS,Team Liquid,1,0
+sup,LEC,Fnatic,0,1
+sup,LEC,G2 Esports,0,1
+sup,LEC,GiantX,1,0
+sup,LEC,Karmine Corp,0,1
+sup,LEC,Movistar KOI,1,0
+sup,LEC,Natus Vincere,1,0
+sup,LEC,SK Gaming,1,0
+sup,LEC,Shifters,1,1
+sup,LEC,Team Heretics,0,2
+sup,LEC,Team Vitality,1,0
+sup,LPL,Anyone's Legend,1,0
+sup,LPL,Bilibili Gaming,1,0
+sup,LPL,EDward Gaming,0,2
+sup,LPL,Invictus Gaming,1,1
+sup,LPL,JD Gaming,1,0
+sup,LPL,LGD Gaming,1,1
+sup,LPL,LNG Esports,1,1
+sup,LPL,Ninjas in Pyjamas,2,0
+sup,LPL,Oh My God,1,0
+sup,LPL,Team WE,1,1
+sup,LPL,ThunderTalk Gaming,0,1
+sup,LPL,Top Esports,2,0
+sup,LPL,Ultra Prime,0,1
+sup,LPL,Weibo Gaming,3,1
+top,CBLOL,FURIA,1,0
+top,CBLOL,Fluxo W7M,0,1
+top,CBLOL,LOUD,1,0
+top,CBLOL,Leviatan,0,1
+top,CBLOL,LØS,1,0
+top,CBLOL,RED Canids,2,0
+top,CBLOL,Vivo Keyd Stars,1,2
+top,CBLOL,paiN Gaming,1,1
+top,LCK,BNK FEARX,1,0
+top,LCK,DN SOOPers,1,0
+top,LCK,Dplus Kia,1,0
+top,LCK,Gen.G,1,0
+top,LCK,HANJIN BRION,1,0
+top,LCK,Hanwha Life Esports,1,0
+top,LCK,KT Rolster,1,0
+top,LCK,Kiwoom DRX,1,0
+top,LCK,Nongshim RedForce,1,0
+top,LCK,T1,1,0
+top,LCP,CTBC Flying Oyster,0,1
+top,LCP,Deep Cross Gaming,1,0
+top,LCP,DetonatioN FocusMe,0,1
+top,LCP,Fukuoka SoftBank HAWKS gaming,0,1
+top,LCP,GAM Esports,1,0
+top,LCP,Ground Zero Gaming,1,0
+top,LCP,MVK Esports,0,1
+top,LCP,Team Secret Whales,1,0
+top,LCS,Cloud9,1,0
+top,LCS,Dignitas,1,0
+top,LCS,Disguised,1,0
+top,LCS,FlyQuest,0,1
+top,LCS,LYON,2,0
+top,LCS,Sentinels,0,1
+top,LCS,Shopify Rebellion,0,1
+top,LCS,Team Liquid,1,0
+top,LEC,Fnatic,0,2
+top,LEC,G2 Esports,1,0
+top,LEC,GiantX,1,1
+top,LEC,Karmine Corp,1,0
+top,LEC,Movistar KOI,1,0
+top,LEC,Natus Vincere,0,1
+top,LEC,SK Gaming,1,0
+top,LEC,Shifters,1,0
+top,LEC,Team Heretics,0,1
+top,LEC,Team Vitality,1,0
+top,LPL,Anyone's Legend,2,0
+top,LPL,Bilibili Gaming,2,1
+top,LPL,EDward Gaming,1,0
+top,LPL,Invictus Gaming,1,2
+top,LPL,JD Gaming,1,0
+top,LPL,LGD Gaming,1,1
+top,LPL,LNG Esports,1,0
+top,LPL,Ninjas in Pyjamas,1,0
+top,LPL,Oh My God,0,1
+top,LPL,Team WE,0,1
+top,LPL,ThunderTalk Gaming,1,0
+top,LPL,Top Esports,2,0
+top,LPL,Ultra Prime,0,1
+top,LPL,Weibo Gaming,1,0
