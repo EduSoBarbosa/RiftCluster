@@ -2,34 +2,128 @@
 
 **Análise exploratória, modelagem não supervisionada e busca de similaridade entre jogadores profissionais de League of Legends.**
 
-RiftCluster combina **Rift**, referência a Summoner’s Rift, e **Cluster**, o agrupamento estatístico utilizado no projeto. O nome representa uma análise de dados que também gera modelos, sem sugerir um ranking automático de habilidade.
-
 O projeto transforma registros individuais de partidas em perfis de jogadores, explora suas características e ajusta modelos K-Means por posição. Uma busca por distância euclidiana complementa os grupos, permitindo consultar jogadores com características estatísticas próximas.
 
 > **Resultado central:** dois grupos por posição foram a configuração de maior silhueta entre as alternativas testadas e apresentaram elevada repetibilidade entre inicializações. Ainda assim, a separação foi pouco marcada. Os agrupamentos descrevem diferenças relativas de recursos e produção estatística; não demonstram a existência de estilos táticos naturais nem medem habilidade individual.
 
-## Sumário
+| Dados analisados | Perfis elegíveis | Modelagem |
+| --- | --- | --- |
+| 23.720 atuações em seis ligas | 324 perfis de jogador–posição, com pelo menos 20 partidas | Cinco modelos K-Means, com oito variáveis por posição |
 
-1. [Objetivo e perguntas](#objetivo-e-perguntas)
-2. [Escopo e origem dos dados](#escopo-e-origem-dos-dados)
-3. [Conteúdo deste pacote](#conteúdo-deste-pacote)
-4. [Tecnologias](#tecnologias)
-5. [Fluxo metodológico](#fluxo-metodológico)
-6. [Separação e seleção](#separação-e-seleção)
-7. [Qualidade dos dados](#qualidade-dos-dados)
-8. [Engenharia dos perfis](#engenharia-dos-perfis)
-9. [Análise exploratória](#análise-exploratória)
-10. [Entradas e padronização](#entradas-e-padronização)
-11. [Modelagem com K-Means](#modelagem-com-k-means)
-12. [Interpretação dos grupos](#interpretação-dos-grupos)
-13. [Testes com maior detalhamento](#testes-com-maior-detalhamento)
-14. [Vitórias e contexto competitivo](#vitórias-e-contexto-competitivo)
-15. [Busca de jogadores semelhantes](#busca-de-jogadores-semelhantes)
-16. [Reprodução no notebook](#reprodução-no-notebook)
-17. [Persistência e reutilização](#persistência-e-reutilização)
-18. [Limitações](#limitações)
-19. [Conclusões e próximos passos](#conclusões-e-próximos-passos)
-20. [Referências](#referências)
+## Navegação
+
+- [Como executar](#como-executar)
+- [Objetivo](#objetivo-e-perguntas) e [dados utilizados](#escopo-e-origem-dos-dados)
+- [Estrutura do repositório](#estrutura-do-repositório) e [tecnologias](#tecnologias)
+- [Metodologia](#fluxo-metodológico), [qualidade dos dados](#qualidade-dos-dados) e [preparação dos perfis](#engenharia-dos-perfis)
+- [Análise exploratória](#análise-exploratória) e [variáveis do modelo](#entradas-e-padronização)
+- [Modelagem e avaliação](#modelagem-com-k-means)
+- [Interpretação dos grupos](#interpretação-dos-grupos), [maior detalhamento](#testes-com-maior-detalhamento) e [vitórias](#vitórias-e-contexto-competitivo)
+- [Busca de jogadores semelhantes](#busca-de-jogadores-semelhantes)
+- [Reutilização dos modelos](#persistência-e-reutilização)
+- [Limitações](#limitações), [próximos passos](#conclusões-e-próximos-passos) e [referências](#referências)
+
+## Como executar
+
+### Ambiente
+
+Se você ainda não clonou o projeto:
+
+```bash
+git clone https://github.com/EduSoBarbosa/RiftCluster.git
+cd RiftCluster
+```
+
+Se já clonou, entre na pasta existente. Crie e ative o ambiente virtual na raiz do projeto:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install pandas numpy matplotlib seaborn scipy scikit-learn ipykernel joblib jupyterlab
+```
+
+Abra [`analise.ipynb`](./analise.ipynb) no VS Code e selecione o kernel da `.venv`, ou inicie o JupyterLab:
+
+```bash
+python -m jupyter lab analise.ipynb
+```
+
+Execute o notebook com a raiz do repositório como diretório de trabalho. O comando de instalação acima não fixa versões; consulte [Tecnologias](#tecnologias) para os ambientes registrados.
+
+No VS Code, selecione o kernel da `.venv`. Instalar pacotes no terminal não troca automaticamente o kernel ativo do notebook. Para conferir:
+
+```python
+import sys
+print(sys.executable)
+```
+
+O pacote de instalação é `scikit-learn`, enquanto os imports usam `sklearn`.
+
+### Leitura da entrada
+
+Obtenha o arquivo `2026_LoL_esports_match_data_from_OraclesElixir.csv` na [fonte Oracle’s Elixir](https://lol.timsevenhuysen.com/matchdata/). Crie a pasta e coloque o CSV nela:
+
+```bash
+mkdir -p data/raw
+```
+
+Uma atualização da fonte pode conter partidas adicionais e produzir resultados diferentes. O período e o SHA-256 da base documentada estão em [Escopo e origem dos dados](#escopo-e-origem-dos-dados).
+
+A leitura usa o seguinte caminho relativo:
+
+```python
+import pandas as pd
+df = pd.read_csv(
+    "data/raw/2026_LoL_esports_match_data_from_OraclesElixir.csv",
+    dtype={"url": "string"},
+    low_memory=False,
+)
+```
+
+Para preservar a representação textual exata de patches em novas execuções, pode-se adicionar `"patch": "string"` ao dicionário `dtype`. Converter um patch numérico para texto depois da leitura não recupera eventuais zeros decimais perdidos. Patch não participa das entradas deste modelo.
+
+<details>
+<summary>Objetos intermediários e verificações de reprodução</summary>
+
+### Ordem dos objetos no notebook
+
+| Objeto | Conteúdo |
+| --- | --- |
+| `df` | Arquivo original |
+| `df_jogadores`, `df_times` | Registros separados por entidade |
+| `df_jogadores_principais` | Recorte das seis ligas |
+| `df_jogadores_selecionado` | Colunas da preparação |
+| `df_jogadores_limpo` | Tipos tratados e indicador de cobertura |
+| `df_perfis` | Uma linha por jogador e posição |
+| `df_modelo` | Perfis com pelo menos 20 partidas |
+| `features_modelo` | Ordem das oito características |
+| `X_por_posicao` | Matrizes nas unidades originais |
+| `scalers_por_posicao` | Scalers ajustados por posição |
+| `X_padronizado_por_posicao` | Matrizes usadas nos modelos e na busca |
+| `modelos_testados` | Modelos indexados por `(posição, k)` |
+| `df_avaliacao_kmeans` | Silhueta, inércia e tamanhos dos grupos |
+| `df_comparacao_k` | Avaliação combinada com estabilidade |
+| `df_contexto_clusters` | Perfis com grupo de referência e taxa de vitória |
+
+Executar as células de cima para baixo. Modificar filtros, variáveis ou o corte mínimo exige reconstruir os perfis, os scalers e os modelos; não é seguro combinar objetos provenientes de execuções diferentes.
+
+### Verificações esperadas para a base documentada
+
+- 23.720 registros individuais após filtrar posições e ligas.
+
+- 416 perfis jogador–posição antes do corte e 324 depois do mínimo de 20 partidas.
+
+- Oito características sem nulos na base do modelo.
+
+- Índices preservados entre `df_modelo` e as matrizes por posição.
+
+- Média aproximadamente zero e desvio populacional aproximadamente um nas colunas não constantes padronizadas.
+
+- Silhueta máxima entre os candidatos em k = 2 para cada posição.
+
+Essas quantidades são específicas desta versão da fonte. Divergências em uma versão atualizada não significam automaticamente erro; devem ser explicadas e registradas.
+
+</details>
 
 ## Objetivo e perguntas
 
@@ -38,10 +132,15 @@ O objetivo é investigar padrões entre jogadores profissionais a partir de suas
 As perguntas que orientam o projeto são:
 
 - Como dano, farm e visão variam entre posições?
+
 - Quais jogadores apresentam combinações semelhantes de recursos e participação em combate?
+
 - Quantos grupos oferecem uma segmentação interpretável e repetível?
+
 - Aumentar a quantidade de grupos revela combinações adicionais ou apenas fragmenta os perfis?
+
 - Como os agrupamentos se relacionam com vitórias e equipes?
+
 - Quais jogadores são estatisticamente mais próximos de um jogador de referência?
 
 Não existe uma coluna com o “estilo correto” de cada jogador. O modelo aprende uma divisão a partir das características fornecidas; os significados dos grupos são interpretados posteriormente. A tarefa não é prever o vencedor de uma partida, avaliar mecanicamente a qualidade de um jogador ou classificar estilos previamente rotulados.
@@ -62,7 +161,7 @@ Não existe uma coluna com o “estilo correto” de cada jogador. O modelo apre
 | Modelos de referência | Um K-Means com dois grupos para cada uma das cinco posições |
 | Variáveis por modelo | Oito médias individuais padronizadas |
 
-O ano no nome do arquivo não significa uma temporada completa. As datas foram extraídas do CSV; não foi inferido um fuso horário para seus timestamps. Os números deste README correspondem à cópia fornecida, não a uma consulta ao vivo da fonte.
+O ano no nome do arquivo não significa uma temporada completa. As datas foram extraídas do CSV; não foi inferido um fuso horário para seus timestamps. Os números deste README correspondem à versão do CSV analisada, não a uma consulta ao vivo da fonte.
 
 As seis ligas regionais selecionadas são `LCK`, `LPL`, `LEC`, `LCS`, `LCP` e `CBLOL`. Torneios internacionais, ligas de desenvolvimento e demais competições presentes no arquivo ficam fora desse recorte. As seis ligas pertencem ao circuito regional de primeira divisão considerado para 2026, mas isso não implica equivalência de força entre elas.
 
@@ -72,23 +171,19 @@ Para rastrear a versão exata do arquivo utilizado:
 SHA-256: 5402817cd5c7e55ac2e6a9921e5129faab02c2d31d8c9450108a4b2a2b3db4cf
 ```
 
-## Conteúdo deste pacote
-
-Este ZIP contém o README e oito imagens PNG com os gráficos essenciais. Os gráficos foram reproduzidos a partir do CSV fornecido, seguindo as transformações e parâmetros usados na análise. Os caminhos são relativos, permitindo visualizar as imagens após extrair o pacote ou publicá-lo em um repositório compatível com Markdown.
+## Estrutura do repositório
 
 | Caminho | Conteúdo |
 | --- | --- |
-| `README.md` | Documentação metodológica, resultados e orientações de reprodução |
-| `gráficos/01_cobertura_15min.png` | Disponibilidade das métricas aos 15 minutos |
-| `gráficos/02_metricas_por_posicao.png` | Distribuições por função no jogo |
-| `gráficos/03_correlacoes_perfis_mid.png` | Correlações nas médias individuais de mid |
-| `gráficos/04_avaliacao_kmeans.png` | Silhueta e inércia para 2 a 6 grupos |
-| `gráficos/05_perfis_grupos_k2.png` | Características dos grupos de referência |
-| `gráficos/06_mid_comparacao_k.png` | Comparação de 2, 3 e 4 grupos no mid |
-| `gráficos/07_vitorias_por_grupo.png` | Distribuição da taxa individual de vitória |
-| `gráficos/08_similaridade_faker.png` | Exemplo de busca por similaridade |
+| [`analise.ipynb`](./analise.ipynb) | Preparação dos dados, exploração, modelagem e busca por similaridade |
+| [`data/processed/`](./data/processed/) | Perfis agregados, grupos e tabelas de avaliação |
+| [`models/perfis_lol.joblib`](./models/perfis_lol.joblib) | Scalers, modelos e perfis exportados |
+| [`models/metadados.json`](./models/metadados.json) | Variáveis, filtros, período e versões registradas na exportação |
+| [`gráficos/`](./gráficos/) | Oito figuras com os principais resultados |
+| `.gitignore` | Regras de arquivos ignorados |
+| `README.md` | Apresentação, metodologia, resultados e orientações de execução |
 
-**O pacote de documentação não inclui o CSV bruto, o notebook nem os modelos serializados.** As instruções de execução e salvamento abaixo correspondem ao notebook desenvolvido no projeto. As tabelas essenciais estão incorporadas neste README.
+O CSV bruto não está versionado. Para refazer a análise, obtenha os dados na fonte e salve o arquivo em `data/raw/`. Os resultados processados e o modelo já exportado podem ser consultados sem baixar novamente a base bruta.
 
 ## Tecnologias
 
@@ -104,22 +199,36 @@ Este ZIP contém o README e oito imagens PNG com os gráficos essenciais. Os gr�
 | Joblib | Persistência de scalers, modelos e objetos associados |
 | pathlib e json | Organização dos arquivos e registro de metadados |
 
-Versões do ambiente utilizado para reproduzir os resultados deste pacote: `pandas 2.2.3`, `numpy 2.3.5`, `scikit-learn 1.8.0`, `matplotlib 3.10.8`, `seaborn 0.13.2`. Versões diferentes, ordem dos registros e alterações na fonte podem produzir diferenças numéricas ou permutações dos rótulos dos grupos.
+**Ambientes registrados:** `models/metadados.json` informa `scikit-learn 1.9.1` e `pandas 3.0.6` para o artefato exportado. A documentação anterior registrava outro ambiente para reprodução das figuras: `pandas 2.2.3`, `numpy 2.3.5`, `scikit-learn 1.8.0`, `matplotlib 3.10.8` e `seaborn 0.13.2`.
+
+Esses registros não constituem um ambiente único nem um lock completo. Para carregar o modelo salvo, use as versões de exportação como referência e confira a compatibilidade. Para refazer os experimentos, registre as versões instaladas junto aos novos resultados. Atualizações de bibliotecas, ordem dos registros e mudanças na fonte podem alterar valores ou permutar os rótulos dos grupos.
 
 ## Fluxo metodológico
 
 1. Carregar o CSV e identificar a unidade de cada registro.
+
 2. Separar jogadores e equipes pela coluna `position`.
+
 3. Selecionar as seis ligas regionais.
+
 4. Preservar contexto e selecionar métricas candidatas.
+
 5. Padronizar tipos, verificar duplicatas e mapear valores ausentes.
+
 6. Explorar distribuições por posição e contexto competitivo.
+
 7. Calcular taxas por partida e agregar por jogador e posição.
+
 8. Avaliar quantidade de partidas, variação e correlações.
+
 9. Selecionar perfis com pelo menos 20 partidas e oito características.
+
 10. Padronizar as entradas separadamente por posição.
+
 11. Ajustar K-Means com 2 a 6 grupos e avaliar suas divisões.
+
 12. Investigar estabilidade, detalhamento e relação com vitórias.
+
 13. Consultar vizinhos estatísticos e preparar a persistência dos resultados.
 
 ## Separação e seleção
@@ -149,11 +258,17 @@ Colunas de draft, multikills, objetivos coletivos e recortes temporais adicionai
 ### Tratamentos aplicados
 
 - Conversão de identificadores e categorias para texto e remoção de espaços externos.
+
 - Conversão de `date` para datetime e das medidas para tipos numéricos.
+
 - Preenchimento de `split` ausente com a categoria `Não informado`.
+
 - Remoção apenas de duplicatas exatas, caso existam.
+
 - Verificação da chave `gameid`, `side`, `position`.
+
 - Preservação de valores numéricos ausentes e criação de um indicador de cobertura aos 15 minutos.
+
 - Preservação de valores extremos até investigação, sem remoção automática por boxplot.
 
 No recorte selecionado, não foram encontradas duplicatas exatas nem repetições da chave verificada. Havia 110 ausências em `split`. Cada uma das três métricas aos 15 minutos tinha 1.330 registros ausentes. Foram observados 1.260 registros `partial`, todos na LPL.
@@ -315,7 +430,9 @@ Dois grupos obtiveram a maior silhueta em todas as posições entre as configura
 Foram executadas dez sementes, de 0 a 9, e calculado o ARI para os 45 pares possíveis. O ARI não depende de os rótulos numéricos coincidirem: uma inversão dos nomes 0 e 1 não altera uma divisão idêntica.
 
 - ARI = 1: mesma partição.
+
 - ARI próximo de 0: concordância próxima da referência esperada ao acaso.
+
 - ARI negativo: concordância inferior a essa referência.
 
 | posicao | k | silhueta | menor_grupo | maior_grupo | ari_medio | ari_minimo |
@@ -442,79 +559,9 @@ buscar_jogadores_semelhantes(
 
 O uso do nome serve à interface; `playerid` continua sendo o identificador de agrupamento. A função verifica nomes ausentes ou ambíguos na posição. Consultas a jogadores com menos de 20 partidas não retornam um perfil elegível nesta versão.
 
-## Reprodução no notebook
-
-### Ambiente
-
-No terminal, dentro da pasta do projeto:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install pandas numpy matplotlib seaborn scipy scikit-learn ipykernel joblib
-```
-
-No VS Code, selecionar o kernel da `.venv`. Instalar pacotes no terminal não troca automaticamente o kernel ativo do notebook. Para conferir:
-
-```python
-import sys
-print(sys.executable)
-```
-
-O pacote de instalação é `scikit-learn`, enquanto os imports usam `sklearn`.
-
-### Leitura da entrada
-
-Colocar o arquivo bruto em `data/raw/` e executar:
-
-```python
-import pandas as pd
-
-df = pd.read_csv(
-    "data/raw/2026_LoL_esports_match_data_from_OraclesElixir.csv",
-    dtype={"url": "string"},
-    low_memory=False,
-)
-```
-
-Para preservar a representação textual exata de patches em novas execuções, pode-se adicionar `"patch": "string"` ao dicionário `dtype`. Converter um patch numérico para texto depois da leitura não recupera eventuais zeros decimais perdidos. Patch não participa das entradas deste modelo.
-
-### Ordem dos objetos no notebook
-
-| Objeto | Conteúdo |
-| --- | --- |
-| `df` | Arquivo original |
-| `df_jogadores`, `df_times` | Registros separados por entidade |
-| `df_jogadores_principais` | Recorte das seis ligas |
-| `df_jogadores_selecionado` | Colunas da preparação |
-| `df_jogadores_limpo` | Tipos tratados e indicador de cobertura |
-| `df_perfis` | Uma linha por jogador e posição |
-| `df_modelo` | Perfis com pelo menos 20 partidas |
-| `features_modelo` | Ordem das oito características |
-| `X_por_posicao` | Matrizes nas unidades originais |
-| `scalers_por_posicao` | Scalers ajustados por posição |
-| `X_padronizado_por_posicao` | Matrizes usadas nos modelos e na busca |
-| `modelos_testados` | Modelos indexados por `(posição, k)` |
-| `df_avaliacao_kmeans` | Silhueta, inércia e tamanhos dos grupos |
-| `df_comparacao_k` | Avaliação combinada com estabilidade |
-| `df_contexto_clusters` | Perfis com grupo de referência e taxa de vitória |
-
-Executar as células de cima para baixo. Modificar filtros, variáveis ou o corte mínimo exige reconstruir os perfis, os scalers e os modelos; não é seguro combinar objetos provenientes de execuções diferentes.
-
-### Verificações esperadas para esta cópia
-
-- 23.720 registros individuais após filtrar posições e ligas.
-- 416 perfis jogador–posição antes do corte e 324 depois do mínimo de 20 partidas.
-- Oito características sem nulos na base do modelo.
-- Índices preservados entre `df_modelo` e as matrizes por posição.
-- Média aproximadamente zero e desvio populacional aproximadamente um nas colunas não constantes padronizadas.
-- Silhueta máxima entre os candidatos em k = 2 para cada posição.
-
-Essas quantidades são específicas desta versão da fonte. Divergências em uma versão atualizada não significam automaticamente erro; devem ser explicadas e registradas.
-
 ## Persistência e reutilização
 
-As células de exportação do notebook preparam os seguintes artefatos, que não estão incluídos neste ZIP de documentação:
+As células de exportação do notebook geram os seguintes artefatos, disponíveis no repositório:
 
 | Arquivo | Finalidade |
 | --- | --- |
@@ -533,7 +580,6 @@ O pacote joblib foi definido com as chaves `metadados`, `scalers`, `modelos_refe
 
 ```python
 import joblib
-
 pacote = joblib.load("models/perfis_lol.joblib")
 features = pacote["metadados"]["features"]
 scaler_mid = pacote["scalers"]["mid"]
@@ -549,16 +595,27 @@ Prever um grupo para um novo jogador não é equivalente a provar desempenho fut
 ## Limitações
 
 1. **Representação parcial do estilo.** As oito métricas resumem recursos, dano, visão e combate, mas não descrevem diretamente decisões táticas, movimentação, comunicação ou execução mecânica.
+
 2. **Influência do contexto.** Campeões, patches, adversários, equipes e ritmo de jogo afetam as estatísticas. Não houve ajuste causal nem normalização específica por esses fatores.
+
 3. **Mistura de períodos e equipes.** O perfil combina partidas do período inteiro por posição; mudanças de estilo ao longo da temporada podem desaparecer na média.
+
 4. **Cobertura desigual.** A exclusão das métricas aos 15 minutos evita uma fonte conhecida de ausência na entrada, mas reduz a informação sobre a fase de rotas.
+
 5. **Critério de elegibilidade.** O corte de 20 partidas é exploratório e exclui estreantes e substitutos com amostras menores. Não foi feito estudo completo de sensibilidade a esse limite.
+
 6. **Geometria do K-Means.** O método favorece grupos compactos em distância euclidiana e divide os dados mesmo que os perfis formem um contínuo.
+
 7. **Outliers e ponderação.** StandardScaler e K-Means são sensíveis a valores extremos. Padronização não elimina a influência de dimensões representadas por várias variáveis relacionadas.
+
 8. **Validação limitada.** ARI entre sementes mede repetibilidade algorítmica sobre a mesma base; não estabilidade sob novas partidas, reamostragem ou mudança de features.
+
 9. **Dependência das observações.** Jogadores compartilham equipes e partidas. Diferenças descritivas de taxa de vitória não foram tratadas como evidências independentes em testes estatísticos.
+
 10. **Similaridade relativa.** Um vizinho próximo na base não é necessariamente equivalente em habilidade, função tática ou potencial de contratação.
+
 11. **Ausência de avaliação supervisionada.** Não existe acurácia de “estilo correto”. Silhueta e ARI não são métricas de previsão de vitórias.
+
 12. **Temporalidade da fonte.** O conjunto é uma fotografia parcial de 2026. Novas partidas podem alterar elegibilidade, médias, vizinhos e fronteiras dos grupos.
 
 ## Conclusões e próximos passos
@@ -570,11 +627,17 @@ A escolha de dois grupos prioriza uma referência repetível, reconhecendo a sob
 Evoluções possíveis, ainda não realizadas nesta versão:
 
 - Avaliar estabilidade por reamostragem das partidas dentro de cada jogador.
+
 - Comparar recortes temporais e diferentes mínimos de partidas.
+
 - Investigar o efeito de campeões, patches e mudanças de equipe.
+
 - Testar as métricas aos 15 minutos em um subconjunto com cobertura suficiente.
+
 - Comparar a representação atual com uma alternativa de escalonamento robusto.
+
 - Avaliar se características de variabilidade acrescentam informação útil.
+
 - Organizar funções reutilizáveis para preparação, transformação e consulta.
 
 Nenhuma dessas extensões é necessária para declarar a primeira versão concluída. São caminhos para investigar questões concretas que os resultados deixaram abertas, sem multiplicar algoritmos apenas para buscar uma métrica maior.
@@ -582,9 +645,15 @@ Nenhuma dessas extensões é necessária para declarar a primeira versão conclu
 ## Referências
 
 - [Oracle’s Elixir — downloads de dados de partidas](https://lol.timsevenhuysen.com/matchdata/)
+
 - [LoL Esports — manual da temporada 2026](https://lolesports.com/pt-BR/season/115547545029543948/handbook)
+
 - [scikit-learn — StandardScaler](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html)
+
 - [scikit-learn — clustering e K-Means](https://scikit-learn.org/stable/modules/clustering.html)
+
 - [scikit-learn — análise de silhueta no K-Means](https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis)
 
-**Autoria dos dados:** fonte Oracle’s Elixir; as estatísticas de jogo estão relacionadas a League of Legends, da Riot Games. O projeto é uma análise independente e não implica afiliação ou endosso. Nenhuma licença própria para redistribuição dos dados brutos é concedida por este README; este pacote contém documentação e figuras derivadas, sem o CSV original.
+**Autoria dos dados:** fonte Oracle’s Elixir; as estatísticas de jogo estão relacionadas a League of Legends, da Riot Games. O projeto é uma análise independente e não implica afiliação ou endosso. Nenhuma licença própria para redistribuição dos dados brutos é concedida por este README; o CSV bruto deve ser obtido na fonte e utilizado conforme seus termos.
+
+Desenvolvido por [Eduardo Barbosa](https://github.com/EduSoBarbosa).
